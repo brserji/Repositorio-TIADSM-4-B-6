@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo de Aguascalientes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Mapa Interactivo de Aguascalientes</h1>
+    <div id="map" style="height: 500px;"></div>
+
+    <script>
+        // Inicializar el mapa y establecer la vista en Aguascalientes, México
+        var map = L.map('map').setView([21.88234, -102.28259], 13);
+
+        // Añadir el tile layer de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Crear iconos personalizados con las imágenes correctas
+        var aguascalientesIcon = L.icon({
+            iconUrl: 'iconos/aguascalientes_icon.png', // Ícono de Aguascalientes
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        var feriaIcon = L.icon({
+            iconUrl: 'iconos/feria_icon.png', // Ícono de la Feria
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        var museoIcon = L.icon({
+            iconUrl: 'iconos/museo_icon.png', // Ícono del Museo
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        // Añadir un marcador con icono personalizado en Aguascalientes capital
+        var marker = L.marker([21.88234, -102.28259], {icon: aguascalientesIcon}).addTo(map);
+        marker.bindPopup("<b>¡Bienvenidos a Aguascalientes!</b><br>Capital del Estado.").openPopup();
+
+        // Marcador en la Plaza de la Patria con icono personalizado
+        var plazaPatria = L.marker([21.88187, -102.29495], {icon: aguascalientesIcon}).addTo(map);
+        plazaPatria.bindPopup("<b>Plaza de la Patria</b><br>Corazón de Aguascalientes.");
+
+        // Marcador en el Museo Nacional de la Muerte con icono personalizado
+        var museoMuerte = L.marker([21.88417, -102.28878], {icon: museoIcon}).addTo(map);
+        museoMuerte.bindPopup("<b>Museo Nacional de la Muerte</b><br>Un lugar único.");
+
+        // Dibujar un círculo en el recinto de la Feria Nacional de San Marcos con un icono distinto
+        var feriaSanMarcos = L.circle([21.87888, -102.29727], {
+            color: 'green',
+            fillColor: '#0f3',
+            fillOpacity: 0.5,
+            radius: 300
+        }).addTo(map);
+        feriaSanMarcos.bindPopup("<b>Feria Nacional de San Marcos</b><br>El evento más importante de Aguascalientes.");
+
+        // Dibuja un polígono para delimitar el área del Centro Histórico
+        var centroHistorico = L.polygon([
+            [21.8821, -102.2935],
+            [21.8829, -102.2865],
+            [21.8797, -102.2860],
+            [21.8792, -102.2920]
+        ]).addTo(map);
+        centroHistorico.bindPopup("<b>Centro Histórico de Aguascalientes</b><br>Una joya colonial.");
+
+        // Agregar controles de capas para permitir mostrar/ocultar los marcadores y formas
+        var baseMaps = {
+            "Mapa base": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+        };
+        var overlayMaps = {
+            "Lugares importantes": L.layerGroup([marker, plazaPatria, museoMuerte]),
+            "Feria de San Marcos": feriaSanMarcos,
+            "Centro Histórico": centroHistorico
+        };
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+    </script>
+</body>
+</html>
